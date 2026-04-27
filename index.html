@@ -1,34 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projeto WebAR - Aranha Interativa</title>
-
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <title>Aranha AR</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;" gesture-detector>
+<body style="margin:0; overflow:hidden;"></body>
 
-        <a-assets>
-            <a-asset-item id="capy-model" src="modelos/recluse_spider.glb"></a-asset-item>
-        </a-assets>
-
-        <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
-
-            <a-gltf-model id="capivara" src="#spider-model" position="0 0 0" scale="0.5 0.5 0.5" class="clickable"
-                gesture-handler animation-mixer="clip: *; loop: repeat; timeScale: 0">
-            </a-gltf-model>
-
+<body>
+    <a-scene embedded arjs="sourceType: webcam;" gesture-detector>
+        <a-entity camera cursor="rayOrigin: mouse; fuse:false" raycaster="objects: .tocavel"></a-entity>
+        <a-marker preset="hiro">
+            <a-entity class="tocavel" gesture-handler gltf-model="url(modelos/aranha.glb)" scale="2.5 2.5 2.5" position="0 0 0"
+                animation__spin="property: rotation; to: 0 360 0;  dur: 3000; easing: linear; 
+                        loop: true; autoplay: false; resumeEvents: mousedown; pauseEvents: mouseup">
+            </a-entity>
         </a-marker>
-
-        <a-entity camera></a-entity>
     </a-scene>
 </body>
 
