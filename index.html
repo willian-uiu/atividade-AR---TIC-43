@@ -9,19 +9,34 @@
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
 
     <script>
-        AFRAME.registerComponent('interacao-aranha', {
-            init: function () {
-                const el = this.el;
-                el.addEventListener('click', function () {
-                    console.log("Aranha clicada!");
-                    // Tenta dar um "pulo" na escala para confirmar o toque
-                    el.setAttribute('scale', '3 3 3');
-                    // Tenta dar play em qualquer animação
-                    el.setAttribute('animation-mixer', { clip: '*', repetitions: Infinity });
+    AFRAME.registerComponent('interacao-aranha', {
+        init: function () {
+            const el = this.el;
+            // Lista exata das animações que você confirmou que funcionam
+            const animacoes = ['recluse_spider_walk', 'recluse_spider_gothit', 'recluse_spider_death'];
+            let indice = 1; // Começa em 1 porque a primeira (0) já vai dar play no init
+
+            // Força ela a começar andando
+            el.setAttribute('animation-mixer', { clip: animacoes[0], loop: 'repeat' });
+
+            el.addEventListener('click', function () {
+                const proximaAnim = animacoes[indice];
+                
+                // Aplicamos a nova animação
+                el.setAttribute('animation-mixer', {
+                    clip: proximaAnim,
+                    loop: 'repeat',
+                    crossFadeDuration: 0.4
                 });
-            }
-        });
-    </script>
+
+                console.log("Trocando para: " + proximaAnim);
+                
+                // Avança na lista
+                indice = (indice + 1) % animacoes.length;
+            });
+        }
+    });
+</script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
@@ -33,8 +48,9 @@
         <a-entity camera cursor="rayOrigin: mouse; fuse:false" raycaster="objects: .tocavel"></a-entity>
 
         <a-marker preset="hiro">
-            <a-entity class="tocavel" gltf-model="aranhaComTextura.glb" scale="2.5 2.5 2.5" position="0 0 0"
-                gesture-handler interacao-aranha animation-mixer="clip: static; loop: repeat">
+            <a-entity class="tocavel" gesture-handler gltf-model="aranhaComTextura.glb" scale="4 4 4"
+                position="0 0 0" interacao-aranha
+                animation__spin="property: rotation; to: 0 360 0; dur: 3000; easing: linear; loop: true; autoplay: false; resumeEvents: mousedown; pauseEvents: mouseup">
             </a-entity>
         </a-marker>
 
