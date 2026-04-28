@@ -56,17 +56,30 @@
         window.onload = function () {
             const aranha = document.querySelector('#modelo-aranha');
 
-            // Mapeamento de botões usando seletores simples
+            // --- Ação de Andar ---
             document.querySelector('#btn-andar').onclick = () => {
                 aranha.setAttribute('animation-mixer', 'clip: recluse_spider_walk; loop: repeat; crossFadeDuration: 0.3');
             };
 
+            // --- Ação de Atacar (Corrigida) ---
             document.querySelector('#btn-atacar').onclick = () => {
-                aranha.setAttribute('animation-mixer', 'clip: recluse_spider_attack; loop: once; crossFadeDuration: 0.3');
+                // 1. Removemos a animação para "limpar" o estado anterior
+                aranha.removeAttribute('animation-mixer');
+                
+                // 2. Aguardamos 10 milissegundos e readicionamos a animação. 
+                // Isso força o A-Frame a recomeçar o ataque a partir do frame zero!
+                setTimeout(() => {
+                    aranha.setAttribute('animation-mixer', 'clip: recluse_spider_attack; loop: once; crossFadeDuration: 0.1');
+                }, 10);
             };
 
+            // --- Ação de Morrer (Corrigida com a mesma lógica) ---
             document.querySelector('#btn-morrer').onclick = () => {
-                aranha.setAttribute('animation-mixer', 'clip: recluse_spider_death; loop: once; clampWhenFinished: true; crossFadeDuration: 0.3');
+                aranha.removeAttribute('animation-mixer');
+                
+                setTimeout(() => {
+                    aranha.setAttribute('animation-mixer', 'clip: recluse_spider_death; loop: once; clampWhenFinished: true; crossFadeDuration: 0.3');
+                }, 10);
             };
         };
     </script>
