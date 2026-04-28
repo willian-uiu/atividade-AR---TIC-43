@@ -2,28 +2,51 @@
 <html>
 
 <head>
-    <title>Projeto AR - Versão Estável</title>
+    <title>Projeto AR - Interações</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
+    
+    <script>
+        AFRAME.registerComponent('mudar-animacao', {
+            init: function () {
+                let el = this.el;
+                let animacoes = ['recluse_spider_walk', 'recluse_spider_gothit', 'recluse_spider_death'];
+                let indice = 0;
+
+                el.addEventListener('mousedown', trocarAnimacao);
+                el.addEventListener('touchstart', trocarAnimacao);
+
+                function trocarAnimacao() {
+                    indice = (indice + 1) % animacoes.length;
+                    el.setAttribute('animation-mixer', 'clip: ' + animacoes[indice] + '; loop: repeat');
+                }
+            }
+        });
+    </script>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" gesture-detector>
-
+        
         <a-light type="ambient" intensity="0.7"></a-light>
         <a-light type="directional" intensity="1" position="1 3 1"></a-light>
 
-        <a-entity camera></a-entity>
-
+        <a-entity camera cursor="rayOrigin: mouse; fuse: false;" raycaster="objects: .tocavel"></a-entity>
+        
         <a-marker preset="hiro">
-            <a-entity class="tocavel" gesture-handler gltf-model="aranhaComTextura.glb" scale="4 4 4"
-                position="0 0 0" animation-mixer="clip: recluse_spider_walk; loop: repeat"
-                animation__spin="property: rotation; to: 0 360 0; dur: 3000; easing: linear; loop: true; autoplay: false; resumeEvents: mousedown; pauseEvents: mouseup">
+            <a-entity 
+                class="tocavel" 
+                gltf-model="aranhaComTextura.glb" 
+                scale="2.5 2.5 2.5" 
+                position="0 0 0"
+                gesture-handler
+                mudar-animacao
+                animation-mixer="clip: recluse_spider_walk; loop: repeat">
             </a-entity>
         </a-marker>
-
+        
     </a-scene>
 </body>
 
